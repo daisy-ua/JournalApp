@@ -14,6 +14,7 @@ ksp = "2.0.0-1.0.21"
 lifecycleVersion = "2.8.7"
 googleServicesVersion = "4.4.2"
 firebaseVersion = "33.9.0"
+googleServicesAuthVersion = "21.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +41,8 @@ viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx"
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseVersion"}
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
+
+google-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "googleServicesAuthVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -85,4 +85,6 @@ dependencies {
     implementation(libs.firebase.auth)
 
     implementation(libs.google.services.auth)
+
+    implementation(libs.coil.compose)
 }

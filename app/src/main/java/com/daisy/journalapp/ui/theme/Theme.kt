@@ -1,6 +1,5 @@
 package com.daisy.journalapp.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -12,9 +11,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Nepal,
+    onPrimary = Mirage,
+    primaryContainer = SpunPearl,
+    onPrimaryContainer = BlackHaze,
+
+    secondary = Tapestry,
+    onSecondary = Mirage,
+    secondaryContainer = TulipTree,
+    onSecondaryContainer = Mirage,
+
+    background = Mirage,
+    onBackground = BlackHaze,
+    surface = SpunPearl,
+    onSurface = BlackHaze,
+
+    outline = Nepal,
 )
 
 private val LightColorScheme = lightColorScheme(

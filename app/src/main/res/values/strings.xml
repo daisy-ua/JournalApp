@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">JournalApp</string>
+    <string name="app_name">journey</string>
+    <string name="app_description">Journey tracker</string>
+    <string name="app_description_full">Create and manage new journeys, or dive back into an existing one.</string>
+    <string name="log_in">Log in</string>
+    <string name="sign_up">Sign up</string>
+
+    <string name="login_welcome_text">Welcome\nBack</string>
+
+    <string name="navigate_up_description">Navigate Up</string>
 </resources>

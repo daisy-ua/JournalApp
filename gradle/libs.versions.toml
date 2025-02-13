@@ -15,6 +15,7 @@ lifecycleVersion = "2.8.7"
 googleServicesVersion = "4.4.2"
 firebaseVersion = "33.9.0"
 googleServicesAuthVersion = "21.3.0"
+coilVersion = "2.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +44,8 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 
 google-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "googleServicesAuthVersion" }
+
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

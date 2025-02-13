@@ -41,12 +41,21 @@ import com.daisy.journalapp.core.presentation.components.TransparentTopAppBar
 import com.daisy.journalapp.ui.theme.JournalAppTheme
 
 @Composable
-fun LoginScreen() {
-    LoginScreenContent()
+fun LoginScreen(
+    onSignUpClick: () -> Unit,
+    onUpClick: () -> Unit,
+) {
+    LoginScreenContent(
+        onSignUpClick = onSignUpClick,
+        onUpClick = onUpClick
+    )
 }
 
 @Composable
-private fun LoginScreenContent() {
+private fun LoginScreenContent(
+    onSignUpClick: () -> Unit = {},
+    onUpClick: () -> Unit = {},
+) {
     BlurredImageBackground(
         imageModel = R.drawable.auth_image,
         modifier = Modifier.fillMaxSize()
@@ -55,7 +64,7 @@ private fun LoginScreenContent() {
             topAppBar = {
                 TransparentTopAppBar(
                     navigationIcon = {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = onUpClick) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
                                 contentDescription = stringResource(id = R.string.navigate_up_description),
@@ -70,7 +79,7 @@ private fun LoginScreenContent() {
                 modifier = Modifier
                     .padding(contentPadding)
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 32.dp),
+                    .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Text(
@@ -149,12 +158,11 @@ private fun LoginScreenContent() {
 
                 JourneyOutlinedActionButton(
                     text = stringResource(id = R.string.sign_up),
+                    onClick = onSignUpClick,
                     isLoading = false,
                     modifier = Modifier
                         .fillMaxWidth()
-                ) {
-                    /*TODO*/
-                }
+                )
 
                 Spacer(modifier = Modifier.height(48.dp))
             }
@@ -164,7 +172,7 @@ private fun LoginScreenContent() {
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
+private fun LoginScreenPreview() {
     JournalAppTheme(darkTheme = true) {
         LoginScreenContent()
     }

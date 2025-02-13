@@ -25,12 +25,21 @@ import com.daisy.journalapp.core.presentation.components.TransparentTopAppBar
 import com.daisy.journalapp.ui.theme.JournalAppTheme
 
 @Composable
-fun AuthScreen() {
-    AuthScreenContent()
+fun AuthScreen(
+    onLogInClick: () -> Unit,
+    onSignUpClick: () -> Unit,
+) {
+    AuthScreenContent(
+        onLogInClick = onLogInClick,
+        onSignUpClick = onSignUpClick
+    )
 }
 
 @Composable
-fun AuthScreenContent() {
+private fun AuthScreenContent(
+    onLogInClick: () -> Unit = {},
+    onSignUpClick: () -> Unit = {},
+) {
     BlurredImageBackground(
         imageModel = R.drawable.auth_image,
         modifier = Modifier.fillMaxSize()
@@ -75,25 +84,23 @@ fun AuthScreenContent() {
 
                 JourneyActionButton(
                     text = stringResource(id = R.string.log_in),
+                    onClick = onLogInClick,
                     isLoading = false,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .fillMaxWidth()
-                ) {
-                    /*TODO*/
-                }
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 JourneyOutlinedActionButton(
                     text = stringResource(id = R.string.sign_up),
+                    onClick = onSignUpClick,
                     isLoading = false,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
-                        .fillMaxWidth()
-                ) {
-                    /*TODO*/
-                }
+                        .fillMaxWidth(),
+                )
 
                 Spacer(modifier = Modifier.height(48.dp))
             }
@@ -105,7 +112,7 @@ fun AuthScreenContent() {
 
 @Preview(showBackground = true)
 @Composable
-fun AuthScreenPreview() {
+private fun AuthScreenPreview() {
     JournalAppTheme {
         AuthScreenContent()
     }

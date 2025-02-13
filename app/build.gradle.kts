@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kspTool)
     alias(libs.plugins.hiltGradlePlugin)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.pluginSerialization)
 }
 
 android {
@@ -62,6 +63,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
@@ -77,6 +79,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
+
+    implementation(libs.kotlin.serialization)
 
     implementation(libs.viewmodel.compose)
     implementation(libs.viewmodel.ktx)

@@ -39,12 +39,21 @@ import com.daisy.journalapp.core.presentation.components.TransparentTopAppBar
 import com.daisy.journalapp.ui.theme.JournalAppTheme
 
 @Composable
-fun RegisterScreen() {
-    RegisterScreenContent()
+fun RegisterScreen(
+    onLogInClick: () -> Unit,
+    onUpClick: () -> Unit,
+) {
+    RegisterScreenContent(
+        onLogInClick = onLogInClick,
+        onUpClick = onUpClick
+    )
 }
 
 @Composable
-private fun RegisterScreenContent() {
+private fun RegisterScreenContent(
+    onLogInClick: () -> Unit = {},
+    onUpClick: () -> Unit = {},
+) {
     BlurredImageBackground(
         imageModel = R.drawable.auth_image,
         modifier = Modifier.fillMaxSize()
@@ -53,7 +62,7 @@ private fun RegisterScreenContent() {
             topAppBar = {
                 TransparentTopAppBar(
                     navigationIcon = {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = onUpClick) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
                                 contentDescription = stringResource(id = R.string.navigate_up_description),
@@ -68,7 +77,7 @@ private fun RegisterScreenContent() {
                 modifier = Modifier
                     .padding(contentPadding)
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 32.dp),
+                    .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Text(
@@ -158,12 +167,11 @@ private fun RegisterScreenContent() {
 
                 JourneyOutlinedActionButton(
                     text = stringResource(id = R.string.log_in),
+                    onClick = onLogInClick,
                     isLoading = false,
                     modifier = Modifier
                         .fillMaxWidth()
-                ) {
-                    /*TODO*/
-                }
+                )
 
                 Spacer(modifier = Modifier.height(48.dp))
             }

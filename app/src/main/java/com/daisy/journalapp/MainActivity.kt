@@ -4,8 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.daisy.journalapp.authentication.ui.auth.AuthScreen
-import com.daisy.journalapp.authentication.ui.login.LoginScreen
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import com.daisy.journalapp.navigation.JourneyNavGraph
 import com.daisy.journalapp.ui.theme.JournalAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,7 +20,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             JournalAppTheme(darkTheme = true) {
-                LoginScreen()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    JourneyNavGraph(rememberNavController())
+                }
             }
         }
     }

@@ -12,10 +12,12 @@ hiltVersion = "2.55"
 hiltNavigationCompose = "1.2.0"
 ksp = "2.0.0-1.0.21"
 lifecycleVersion = "2.8.7"
+navigationCompose = "2.8.6"
 googleServicesVersion = "4.4.2"
 firebaseVersion = "33.9.0"
 googleServicesAuthVersion = "21.3.0"
 coilVersion = "2.7.0"
+serializationVersion = "1.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,6 +27,7 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -47,6 +50,8 @@ google-services-auth = { module = "com.google.android.gms:play-services-auth", v
 
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilVersion" }
 
+kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationVersion"}
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -54,3 +59,4 @@ jetbrains-kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose"
 kspTool = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hiltGradlePlugin = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServicesVersion" }
+pluginSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

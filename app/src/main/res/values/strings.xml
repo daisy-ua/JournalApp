@@ -10,12 +10,14 @@
     <string name="or">or</string>
 
 
+    <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
 
     <string name="login_welcome_text">Welcome\nBack</string>
+    <string name="register_welcome_text">Create\nAccount</string>
 
     <string name="navigate_up_description">Navigate Up</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.daisy.journalapp.core.presentation
+package com.daisy.journalapp.core.presentation.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

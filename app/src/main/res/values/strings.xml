@@ -2,8 +2,18 @@
     <string name="app_name">journey</string>
     <string name="app_description">Journey tracker</string>
     <string name="app_description_full">Create and manage new journeys, or dive back into an existing one.</string>
+
+    <!--    Auth options    -->
     <string name="log_in">Log in</string>
     <string name="sign_up">Sign up</string>
+
+    <string name="or">or</string>
+
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
 
     <string name="login_welcome_text">Welcome\nBack</string>
 

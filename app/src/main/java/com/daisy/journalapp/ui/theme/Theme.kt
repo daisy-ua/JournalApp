@@ -11,28 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Nepal,
-    onPrimary = Mirage,
-    primaryContainer = SpunPearl,
-    onPrimaryContainer = BlackHaze,
-
-    secondary = Tapestry,
-    onSecondary = Mirage,
-    secondaryContainer = TulipTree,
-    onSecondaryContainer = Mirage,
-
-    background = Mirage,
-    onBackground = BlackHaze,
-    surface = SpunPearl,
-    onSurface = BlackHaze,
-
-    outline = Nepal,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
 )
 
 @Composable

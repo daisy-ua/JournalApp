@@ -20,4 +20,8 @@
     <string name="register_welcome_text">Create\nAccount</string>
 
     <string name="navigate_up_description">Navigate Up</string>
+
+    <!--    Error messages    -->
+    <string name="invalid_email">Email is invalid</string>
+    <string name="password_required">Password is required</string>
 </resources>

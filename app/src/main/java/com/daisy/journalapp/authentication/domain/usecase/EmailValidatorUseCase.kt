@@ -2,8 +2,11 @@ package com.daisy.journalapp.authentication.domain.usecase
 
 import android.util.Patterns
 import com.daisy.journalapp.authentication.domain.validation.EmailValidationResult
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class EmailValidatorUseCase {
+@Singleton
+class EmailValidatorUseCase @Inject constructor() {
 
     operator fun invoke(email: String): EmailValidationResult {
         return when {

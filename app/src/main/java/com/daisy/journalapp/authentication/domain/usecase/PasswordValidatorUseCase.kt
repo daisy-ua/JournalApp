@@ -1,13 +1,17 @@
 package com.daisy.journalapp.authentication.domain.usecase
 
 import com.daisy.journalapp.authentication.domain.validation.PasswordValidationResult
+import com.daisy.journalapp.core.presentation.AuthConfig
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class PasswordValidatorUseCase {
+@Singleton
+class PasswordValidatorUseCase @Inject constructor() {
 
     operator fun invoke(password: String): PasswordValidationResult {
         return when {
             password.isBlank() -> PasswordValidationResult.EMPTY
-            password.length < 8 -> PasswordValidationResult.SHORT
+            password.length < AuthConfig.MIN_PASSWORD_LENGTH -> PasswordValidationResult.SHORT
             !validatePasswordHasDigit(password) -> PasswordValidationResult.MISSING_NUMERIC_CHAR
             !validatePasswordHasSpecialChar(password) -> PasswordValidationResult.MISSING_SPECIAL_CHAR
             else -> PasswordValidationResult.CORRECT

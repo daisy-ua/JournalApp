@@ -30,15 +30,18 @@ fun AuthScreen(
     onSignUpClick: () -> Unit,
 ) {
     AuthScreenContent(
-        onLogInClick = onLogInClick,
-        onSignUpClick = onSignUpClick
+        onAction = { action ->
+            when (action) {
+                AuthAction.OnLogInClick -> onLogInClick()
+                AuthAction.OnSignUpClick -> onSignUpClick()
+            }
+        }
     )
 }
 
 @Composable
 private fun AuthScreenContent(
-    onLogInClick: () -> Unit = {},
-    onSignUpClick: () -> Unit = {},
+    onAction: (AuthAction) -> Unit,
 ) {
     BlurredImageBackground(
         imageModel = R.drawable.auth_image,
@@ -84,7 +87,9 @@ private fun AuthScreenContent(
 
                 JourneyActionButton(
                     text = stringResource(id = R.string.log_in),
-                    onClick = onLogInClick,
+                    onClick = {
+                        onAction(AuthAction.OnLogInClick)
+                    },
                     isLoading = false,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
@@ -95,7 +100,7 @@ private fun AuthScreenContent(
 
                 JourneyOutlinedActionButton(
                     text = stringResource(id = R.string.sign_up),
-                    onClick = onSignUpClick,
+                    onClick = { onAction(AuthAction.OnSignUpClick) },
                     isLoading = false,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
@@ -114,6 +119,8 @@ private fun AuthScreenContent(
 @Composable
 private fun AuthScreenPreview() {
     JournalAppTheme {
-        AuthScreenContent()
+        AuthScreenContent(
+            {}
+        )
     }
 }

@@ -22,6 +22,14 @@
     <string name="navigate_up_description">Navigate Up</string>
 
     <!--    Error messages    -->
+    <string name="username_too_short">Username must be at least %1$d characters long</string>
+    <string name="username_required">Username is required</string>
+
     <string name="invalid_email">Email is invalid</string>
+    <string name="email_required">Email is required</string>
+
+    <string name="password_too_short">Password must be at least %1$d characters long</string>
+    <string name="password_missing_special">Password must contain at least one special character</string>
+    <string name="password_missing_numeric">Password must contain at least one number</string>
     <string name="password_required">Password is required</string>
 </resources>

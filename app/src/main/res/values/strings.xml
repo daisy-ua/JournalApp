@@ -32,4 +32,18 @@
     <string name="password_missing_special">Password must contain at least one special character</string>
     <string name="password_missing_numeric">Password must contain at least one number</string>
     <string name="password_required">Password is required</string>
+
+    <!-- Auth Errors -->
+    <string name="invalid_credentials_error">Invalid credentials, please try again.</string>
+    <string name="user_already_exists_error">A user with this email already exists.</string>
+    <string name="no_internet_error">No internet connection detected.</string>
+    <string name="unknown_auth_error">An unknown error occurred during authentication. Please try again later.</string>
+
+    <!-- Network Errors -->
+    <string name="timeout_error">Network timeout. Please check your connection.</string>
+    <string name="user_not_found_error">User not found. Please check the credentials and try again.</string>
+    <string name="unknown_network_error">Network error occurred. Please check your internet connection and try again.</string>
+
+    <!--    Unknown Error    -->
+    <string name="unknown_error">Unknown error occurred.</string>
 </resources>

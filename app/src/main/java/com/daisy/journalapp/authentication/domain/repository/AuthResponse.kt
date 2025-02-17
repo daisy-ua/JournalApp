@@ -1,10 +1,7 @@
 package com.daisy.journalapp.authentication.domain.repository
 
 import com.daisy.journalapp.authentication.domain.model.UserProfile
+import com.daisy.journalapp.core.presentation.utils.ErrorType
+import com.daisy.journalapp.core.presentation.utils.Response
 
-sealed interface AuthResponse {
-
-    data class Success(val userProfile: UserProfile): AuthResponse
-
-    data class Error(val message: String): AuthResponse
-}
+typealias AuthResponse = Response<UserProfile, ErrorType>

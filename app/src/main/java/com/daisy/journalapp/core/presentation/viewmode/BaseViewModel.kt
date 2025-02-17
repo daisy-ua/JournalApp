@@ -3,10 +3,12 @@ package com.daisy.journalapp.core.presentation.viewmode
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -26,7 +28,7 @@ abstract class BaseViewModel<State : UiState, Action : UiAction, Effect : UiEffe
     val action: SharedFlow<Action> get() = _action
 
     private val _effect: Channel<Effect> = Channel(Channel.CONFLATED)
-    val effect: Channel<Effect> get() = _effect
+    val effect: Flow<Effect> get() = _effect.receiveAsFlow()
 
     val currentState: State
         get() = state.value

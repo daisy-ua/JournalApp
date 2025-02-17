@@ -2,18 +2,22 @@ package com.daisy.journalapp.authentication.ui.register
 
 import androidx.lifecycle.viewModelScope
 import com.daisy.journalapp.R
+import com.daisy.journalapp.authentication.domain.model.UserProfile
 import com.daisy.journalapp.authentication.domain.usecase.EmailValidatorUseCase
 import com.daisy.journalapp.authentication.domain.usecase.PasswordValidatorUseCase
+import com.daisy.journalapp.authentication.domain.usecase.SignUpWithEmailUseCase
 import com.daisy.journalapp.authentication.domain.usecase.UsernameValidatorUseCase
 import com.daisy.journalapp.authentication.domain.validation.EmailValidationResult
 import com.daisy.journalapp.authentication.domain.validation.PasswordValidationResult
 import com.daisy.journalapp.authentication.domain.validation.UsernameValidationResult
 import com.daisy.journalapp.core.presentation.AuthConfig
 import com.daisy.journalapp.core.presentation.UiText
+import com.daisy.journalapp.core.presentation.utils.Response
+import com.daisy.journalapp.core.presentation.utils.asTrimmedString
+import com.daisy.journalapp.core.presentation.utils.message
 import com.daisy.journalapp.core.presentation.viewmode.BaseViewModel
 import com.daisy.journalapp.core.presentation.viewmode.UiEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,7 +26,8 @@ class RegisterViewModel @Inject constructor(
     private val usernameValidatorUseCase: UsernameValidatorUseCase,
     private val emailValidatorUseCase: EmailValidatorUseCase,
     private val passwordValidatorUseCase: PasswordValidatorUseCase,
-) : BaseViewModel<RegisterState, RegisterAction, UiEffect>(RegisterState()) {
+    private val signUpWithEmailUseCase: SignUpWithEmailUseCase,
+) : BaseViewModel<RegisterState, RegisterAction, RegisterEffect>(RegisterState()) {
 
     override fun onAction(action: RegisterAction) {
         when (action) {
@@ -47,19 +52,36 @@ class RegisterViewModel @Inject constructor(
                 )
             }
 
-            delay(2000)
+            val userProfile = UserProfile(
+                username = currentState.username.asTrimmedString(),
+                email = currentState.email.asTrimmedString()
+            )
+
+            val result = signUpWithEmailUseCase(
+                userProfile = userProfile,
+                password = currentState.password.text.toString()
+            )
 
             updateState { copy(isRegisterInProgress = false) }
 
+            when (result) {
+                is Response.Success -> {
+                    setEffect { RegisterEffect.Success }
+                }
+
+                is Response.Error -> {
+                    setEffect { RegisterEffect.Error(result.error.message) }
+                }
+            }
         }
     }
 
     private fun validateUserInput(): Boolean {
         val usernameValidationResult = usernameValidatorUseCase(
-            username = currentState.username.text.trim().toString()
+            username = currentState.username.asTrimmedString()
         )
         val emailValidationResult = emailValidatorUseCase(
-            email = currentState.email.text.trim().toString()
+            email = currentState.email.asTrimmedString()
         )
         val passwordValidationResult = passwordValidatorUseCase(
             password = currentState.password.text.toString()

@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.daisy.journalapp.R
+import com.daisy.journalapp.core.presentation.ObserveEffects
+import com.daisy.journalapp.core.presentation.UiText
 import com.daisy.journalapp.core.presentation.components.ArrowLeftIcon
 import com.daisy.journalapp.core.presentation.components.BaseScaffold
 import com.daisy.journalapp.core.presentation.components.BlurredImageBackground
@@ -34,6 +36,7 @@ import com.daisy.journalapp.core.presentation.components.JourneyTextField
 import com.daisy.journalapp.core.presentation.components.PersonIcon
 import com.daisy.journalapp.core.presentation.components.TextDivider
 import com.daisy.journalapp.core.presentation.components.TransparentTopAppBar
+import com.daisy.journalapp.core.presentation.utils.showToast
 import com.daisy.journalapp.ui.theme.JournalAppTheme
 
 @Composable
@@ -43,6 +46,17 @@ fun RegisterScreen(
     viewModel: RegisterViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    ObserveEffects(flow = viewModel.effect) { effect ->
+        when (effect) {
+            is RegisterEffect.Error -> context.showToast(effect.error)
+            RegisterEffect.Success -> {
+                context.showToast(UiText.Plain("Success"))
+//                TODO: navigate to app
+            }
+        }
+    }
 
     RegisterScreenContent(
         state = state,

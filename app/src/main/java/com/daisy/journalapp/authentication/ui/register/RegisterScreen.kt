@@ -66,7 +66,7 @@ fun RegisterScreen(
                 RegisterAction.OnNavigateUp -> onUpClick()
                 else -> Unit
             }
-            viewModel.onAction(action)
+            viewModel.setAction(action)
         }
     )
 }
@@ -86,7 +86,7 @@ private fun RegisterScreenContent(
             topAppBar = {
                 TransparentTopAppBar(
                     navigationIcon = {
-                        IconButton(onClick = { onAction(RegisterAction.OnRegisterClick) }) {
+                        IconButton(onClick = { onAction(RegisterAction.OnNavigateUp) }) {
                             Icon(
                                 imageVector = ArrowLeftIcon,
                                 contentDescription = stringResource(id = R.string.navigate_up_description),

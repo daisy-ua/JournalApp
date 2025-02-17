@@ -6,8 +6,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -25,7 +25,6 @@ abstract class BaseViewModel<State : UiState, Action : UiAction, Effect : UiEffe
     val state: StateFlow<State> get() = _state
 
     private val _action: MutableSharedFlow<Action> = MutableSharedFlow()
-    val action: SharedFlow<Action> get() = _action
 
     private val _effect: Channel<Effect> = Channel(Channel.CONFLATED)
     val effect: Flow<Effect> get() = _effect.receiveAsFlow()
@@ -33,13 +32,16 @@ abstract class BaseViewModel<State : UiState, Action : UiAction, Effect : UiEffe
     val currentState: State
         get() = state.value
 
+    init {
+        subscribeActions()
+    }
+
     protected fun updateState(update: State.() -> State) {
         _state.update(update)
     }
 
-    protected fun setAction(action: Action) {
-        val newAction = action
-        viewModelScope.launch { _action.emit(newAction) }
+    fun setAction(action: Action) {
+        viewModelScope.launch { _action.emit(action) }
     }
 
     protected fun setEffect(builder: () -> Effect) {
@@ -47,5 +49,15 @@ abstract class BaseViewModel<State : UiState, Action : UiAction, Effect : UiEffe
         viewModelScope.launch { _effect.send(effectValue) }
     }
 
-    abstract fun onAction(action: Action)
+    private fun subscribeActions() {
+        viewModelScope.launch {
+            _action
+                .conflate()
+                .collect {
+                    onAction(it)
+                }
+        }
+    }
+
+    protected abstract fun onAction(action: Action)
 }

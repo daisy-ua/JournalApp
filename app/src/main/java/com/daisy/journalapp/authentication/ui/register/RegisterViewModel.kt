@@ -16,7 +16,6 @@ import com.daisy.journalapp.core.presentation.utils.Response
 import com.daisy.journalapp.core.presentation.utils.asTrimmedString
 import com.daisy.journalapp.core.presentation.utils.message
 import com.daisy.journalapp.core.presentation.viewmode.BaseViewModel
-import com.daisy.journalapp.core.presentation.viewmode.UiEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

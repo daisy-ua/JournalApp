@@ -3,19 +3,22 @@ package com.daisy.journalapp.authentication.ui.login
 import androidx.lifecycle.viewModelScope
 import com.daisy.journalapp.R
 import com.daisy.journalapp.authentication.domain.usecase.EmailValidatorUseCase
+import com.daisy.journalapp.authentication.domain.usecase.SignInWithEmailUseCase
 import com.daisy.journalapp.authentication.domain.validation.EmailValidationResult
 import com.daisy.journalapp.core.presentation.UiText
-import com.daisy.journalapp.core.presentation.viewmode.BaseViewModel
-import com.daisy.journalapp.core.presentation.viewmode.UiEffect
+import com.daisy.journalapp.core.presentation.utils.asTrimmedString
+import com.daisy.journalapp.core.presentation.utils.handle
+import com.daisy.journalapp.core.presentation.utils.message
+import com.daisy.journalapp.core.presentation.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val emailValidatorUseCase: EmailValidatorUseCase,
-) : BaseViewModel<LoginState, LoginAction, UiEffect>(LoginState()) {
+    private val signInWithEmailUseCase: SignInWithEmailUseCase,
+) : BaseViewModel<LoginState, LoginAction, LoginEffect>(LoginState()) {
 
     override fun onAction(action: LoginAction) {
         when (action) {
@@ -33,9 +36,17 @@ class LoginViewModel @Inject constructor(
 
             updateState { copy(isLoginInProgress = true, emailError = null, passwordError = null) }
 
-            delay(2000)
+            val result = signInWithEmailUseCase(
+                email = currentState.email.asTrimmedString(),
+                password = currentState.password.text.toString()
+            )
 
             updateState { copy(isLoginInProgress = false) }
+
+            result.handle(
+                onSuccess = { setEffect { LoginEffect.Success } },
+                onError = { error -> LoginEffect.Error(error.message) }
+            )
         }
     }
 

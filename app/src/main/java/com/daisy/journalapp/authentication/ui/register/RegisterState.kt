@@ -2,7 +2,7 @@ package com.daisy.journalapp.authentication.ui.register
 
 import androidx.compose.foundation.text.input.TextFieldState
 import com.daisy.journalapp.core.presentation.UiText
-import com.daisy.journalapp.core.presentation.viewmode.UiState
+import com.daisy.journalapp.core.presentation.viewmodel.UiState
 
 data class RegisterState(
 

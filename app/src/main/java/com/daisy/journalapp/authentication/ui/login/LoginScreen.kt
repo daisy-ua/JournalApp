@@ -26,15 +26,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.daisy.journalapp.R
+import com.daisy.journalapp.core.presentation.ObserveEffects
+import com.daisy.journalapp.core.presentation.UiText
 import com.daisy.journalapp.core.presentation.components.ArrowLeftIcon
 import com.daisy.journalapp.core.presentation.components.BaseScaffold
 import com.daisy.journalapp.core.presentation.components.BlurredImageBackground
 import com.daisy.journalapp.core.presentation.components.EmailIcon
 import com.daisy.journalapp.core.presentation.components.JourneyActionButton
+import com.daisy.journalapp.core.presentation.components.JourneyOutlinedActionButton
 import com.daisy.journalapp.core.presentation.components.JourneyPasswordTextField
 import com.daisy.journalapp.core.presentation.components.JourneyTextField
 import com.daisy.journalapp.core.presentation.components.TextDivider
 import com.daisy.journalapp.core.presentation.components.TransparentTopAppBar
+import com.daisy.journalapp.core.presentation.utils.showToast
 import com.daisy.journalapp.ui.theme.JournalAppTheme
 
 @Composable
@@ -44,6 +48,17 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    ObserveEffects(flow = viewModel.effect) { effect ->
+        when (effect) {
+            is LoginEffect.Error -> context.showToast(effect.error)
+            LoginEffect.Success -> {
+                context.showToast(UiText.Plain("Success"))
+//                TODO: navigate to app
+            }
+        }
+    }
 
     LoginScreenContent(
         state = state,
@@ -136,6 +151,16 @@ private fun LoginScreenContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 TextDivider(text = stringResource(id = R.string.or))
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                JourneyOutlinedActionButton(
+                    text = stringResource(id = R.string.sign_up),
+                    onClick = { onAction(LoginAction.OnRegisterClick) },
+                    isLoading = false,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
 
                 Spacer(modifier = Modifier.height(48.dp))
             }

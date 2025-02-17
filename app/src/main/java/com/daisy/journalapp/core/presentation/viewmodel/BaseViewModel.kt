@@ -1,4 +1,4 @@
-package com.daisy.journalapp.core.presentation.viewmode
+package com.daisy.journalapp.core.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

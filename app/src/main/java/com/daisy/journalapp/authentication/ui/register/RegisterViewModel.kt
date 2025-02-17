@@ -12,10 +12,10 @@ import com.daisy.journalapp.authentication.domain.validation.PasswordValidationR
 import com.daisy.journalapp.authentication.domain.validation.UsernameValidationResult
 import com.daisy.journalapp.core.presentation.AuthConfig
 import com.daisy.journalapp.core.presentation.UiText
-import com.daisy.journalapp.core.presentation.utils.Response
 import com.daisy.journalapp.core.presentation.utils.asTrimmedString
+import com.daisy.journalapp.core.presentation.utils.handle
 import com.daisy.journalapp.core.presentation.utils.message
-import com.daisy.journalapp.core.presentation.viewmode.BaseViewModel
+import com.daisy.journalapp.core.presentation.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -63,15 +63,10 @@ class RegisterViewModel @Inject constructor(
 
             updateState { copy(isRegisterInProgress = false) }
 
-            when (result) {
-                is Response.Success -> {
-                    setEffect { RegisterEffect.Success }
-                }
-
-                is Response.Error -> {
-                    setEffect { RegisterEffect.Error(result.error.message) }
-                }
-            }
+            result.handle(
+                onSuccess = { setEffect { RegisterEffect.Success } },
+                onError = { error -> RegisterEffect.Error(error.message) }
+            )
         }
     }
 

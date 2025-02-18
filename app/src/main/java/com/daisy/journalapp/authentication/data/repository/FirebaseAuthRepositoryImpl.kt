@@ -22,12 +22,9 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
 ) : AuthRepository {
 
-    override suspend fun signUpWithEmail(
-        userProfile: UserProfile,
-        password: String
-    ): AuthResponse {
+    override suspend fun signUpWithEmail(userProfile: UserProfile): AuthResponse {
         return try {
-            val result = auth.createUserWithEmailAndPassword(userProfile.email!!, password).await()
+            val result = auth.createUserWithEmailAndPassword(userProfile.email!!, userProfile.password!!).await()
             val firebaseUser = result.user
                 ?: return Response.Error(AuthError.UnknownAuthError)
 

@@ -1,5 +1,6 @@
 package com.daisy.journalapp.authentication.ui.auth
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,12 +12,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.daisy.journalapp.R
+import com.daisy.journalapp.authentication.ui.credential.CredentialManagerWrapper
 import com.daisy.journalapp.core.presentation.components.BaseScaffold
 import com.daisy.journalapp.core.presentation.components.BlurredImageBackground
 import com.daisy.journalapp.core.presentation.components.JourneyActionButton
@@ -29,6 +37,19 @@ fun AuthScreen(
     onLogInClick: () -> Unit,
     onSignUpClick: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val credentialManager = remember {
+        CredentialManagerWrapper(context as ComponentActivity)
+    }
+
+    LaunchedEffect(Unit) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            val result = credentialManager.getStoredCredentials()
+//            TODO: add auth and navigation
+        }
+    }
+
     AuthScreenContent(
         onAction = { action ->
             when (action) {

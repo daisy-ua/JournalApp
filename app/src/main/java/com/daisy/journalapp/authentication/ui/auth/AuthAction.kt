@@ -1,6 +1,8 @@
 package com.daisy.journalapp.authentication.ui.auth
 
-sealed interface AuthAction {
+import com.daisy.journalapp.core.presentation.viewmodel.UiAction
+
+sealed interface AuthAction : UiAction {
 
     data object OnLogInClick : AuthAction
 

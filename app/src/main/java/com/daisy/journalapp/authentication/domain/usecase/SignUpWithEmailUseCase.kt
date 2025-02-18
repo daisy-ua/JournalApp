@@ -10,7 +10,7 @@ import javax.inject.Singleton
 class SignUpWithEmailUseCase @Inject constructor(
     private val authRepository: AuthRepository,
 ) {
-    suspend operator fun invoke(userProfile: UserProfile, password: String): AuthResponse {
-        return authRepository.signUpWithEmail(userProfile, password)
+    suspend operator fun invoke(userProfile: UserProfile): AuthResponse {
+        return authRepository.signUpWithEmail(userProfile)
     }
 }

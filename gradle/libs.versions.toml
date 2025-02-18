@@ -14,6 +14,7 @@ ksp = "2.0.0-1.0.21"
 lifecycleVersion = "2.8.7"
 navigationCompose = "2.8.6"
 googleServicesVersion = "4.4.2"
+credentialVersion = "1.3.0"
 firebaseVersion = "33.9.0"
 googleServicesAuthVersion = "21.3.0"
 coilVersion = "2.7.0"
@@ -35,6 +36,10 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-credentials-core = { module = "androidx.credentials:credentials", version.ref = "credentialVersion" }
+#optional - needed for credentials support from play services, for devices runningAndroid 13 and below.
+androidx-credentials-compat = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentialVersion" }
+
 
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }

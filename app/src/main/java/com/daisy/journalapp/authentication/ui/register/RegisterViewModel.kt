@@ -10,8 +10,10 @@ import com.daisy.journalapp.authentication.domain.usecase.UsernameValidatorUseCa
 import com.daisy.journalapp.authentication.domain.validation.EmailValidationResult
 import com.daisy.journalapp.authentication.domain.validation.PasswordValidationResult
 import com.daisy.journalapp.authentication.domain.validation.UsernameValidationResult
+import com.daisy.journalapp.authentication.ui.credential.UserCredentials
 import com.daisy.journalapp.core.presentation.AuthConfig
 import com.daisy.journalapp.core.presentation.UiText
+import com.daisy.journalapp.core.presentation.utils.Response
 import com.daisy.journalapp.core.presentation.utils.asTrimmedString
 import com.daisy.journalapp.core.presentation.utils.handle
 import com.daisy.journalapp.core.presentation.utils.message
@@ -53,19 +55,30 @@ class RegisterViewModel @Inject constructor(
 
             val userProfile = UserProfile(
                 username = currentState.username.asTrimmedString(),
-                email = currentState.email.asTrimmedString()
+                email = currentState.email.asTrimmedString(),
+                password = currentState.password.text.toString()
             )
 
             val result = signUpWithEmailUseCase(
                 userProfile = userProfile,
-                password = currentState.password.text.toString()
             )
 
             updateState { copy(isRegisterInProgress = false) }
 
             result.handle(
-                onSuccess = { setEffect { RegisterEffect.Success } },
-                onError = { error -> RegisterEffect.Error(error.message) }
+                onSuccess = {
+                    setEffect {
+                        RegisterEffect.Success(
+                            (result as Response.Success).data.let { user ->
+                                UserCredentials(
+                                    id = user.email!!,
+                                    password = user.password
+                                )
+                            }
+                        )
+                    }
+                },
+                onError = { error -> setEffect { RegisterEffect.Error(error.message) } }
             )
         }
     }

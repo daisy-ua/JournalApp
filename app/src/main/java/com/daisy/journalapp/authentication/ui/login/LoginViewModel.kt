@@ -45,7 +45,7 @@ class LoginViewModel @Inject constructor(
 
             result.handle(
                 onSuccess = { setEffect { LoginEffect.Success } },
-                onError = { error -> LoginEffect.Error(error.message) }
+                onError = { error -> setEffect { LoginEffect.Error(error.message) } }
             )
         }
     }

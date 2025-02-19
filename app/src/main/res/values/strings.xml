@@ -44,6 +44,9 @@
     <string name="user_not_found_error">User not found. Please check the credentials and try again.</string>
     <string name="unknown_network_error">Network error occurred. Please check your internet connection and try again.</string>
 
+    <!-- Credentials Errors -->
+    <string name="credentials_retrieval_error">Couldn\'t access saved login credentials. Please sign in manually.</string>
+
     <!--    Unknown Error    -->
     <string name="unknown_error">Unknown error occurred.</string>
 </resources>

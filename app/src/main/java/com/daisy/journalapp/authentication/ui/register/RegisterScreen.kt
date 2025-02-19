@@ -1,6 +1,5 @@
 package com.daisy.journalapp.authentication.ui.register
 
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -61,14 +60,13 @@ fun RegisterScreen(
     ObserveEffects(flow = viewModel.effect) { effect ->
         when (effect) {
             is RegisterEffect.Error -> {
-                Log.d("daisy-ua", "RegisterScreen: error")
                 context.showToast(effect.error)
             }
+
             is RegisterEffect.Success -> {
                 context.showToast(UiText.Plain("Success"))
                 scope.launch {
                     val result = credentialManager.saveCredentials(effect.credentials)
-                    Log.d("daisy-ua", "RegisterScreen: $effect.credentials")
                 }
 //                TODO: navigate to app
             }

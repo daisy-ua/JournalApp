@@ -25,10 +25,10 @@ class CredentialManagerWrapper(
                     credentialOptions = listOf(GetPasswordOption())
                 )
             )
-            val credential = credentialResponse.credential as? PasswordCredential
+            val credentials = credentialResponse.credential as? PasswordCredential
                 ?: return GetCredentialResult.Failure
 
-            GetCredentialResult.Success(UserCredentials(credential.id))
+            GetCredentialResult.Success(UserCredentials(credentials.id, credentials.password))
         } catch (e: GetCredentialCancellationException) {
             GetCredentialResult.Cancelled
         } catch (e: NoCredentialException) {
@@ -53,7 +53,7 @@ class CredentialManagerWrapper(
             SaveCredentialResult.Cancelled
         } catch (e: CreateCredentialException) {
             SaveCredentialResult.Failure
-        } catch (e: KotlinNullPointerException) {
+        } catch (e: NullPointerException) {
             SaveCredentialResult.Failure
         }
     }

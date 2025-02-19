@@ -20,22 +20,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.daisy.journalapp.R
 import com.daisy.journalapp.authentication.ui.credential.CredentialManagerWrapper
+import com.daisy.journalapp.authentication.ui.credential.GetCredentialResult
+import com.daisy.journalapp.core.presentation.ObserveEffects
+import com.daisy.journalapp.core.presentation.UiText
 import com.daisy.journalapp.core.presentation.components.BaseScaffold
 import com.daisy.journalapp.core.presentation.components.BlurredImageBackground
 import com.daisy.journalapp.core.presentation.components.JourneyActionButton
 import com.daisy.journalapp.core.presentation.components.JourneyOutlinedActionButton
 import com.daisy.journalapp.core.presentation.components.TransparentTopAppBar
+import com.daisy.journalapp.core.presentation.utils.showToast
 import com.daisy.journalapp.ui.theme.JournalAppTheme
 
 @Composable
 fun AuthScreen(
     onLogInClick: () -> Unit,
     onSignUpClick: () -> Unit,
+    viewModel: AuthViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -45,8 +51,28 @@ fun AuthScreen(
 
     LaunchedEffect(Unit) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            val result = credentialManager.getStoredCredentials()
-//            TODO: add auth and navigation
+            when (val result = credentialManager.getStoredCredentials()) {
+                is GetCredentialResult.Success -> {
+                    viewModel.setAction(
+                        AuthAction.OnLogInAuto(result.credential)
+                    )
+                }
+
+                is GetCredentialResult.Failure ->
+                    context.showToast(UiText.Resource(R.string.credentials_retrieval_error))
+
+                else -> Unit
+            }
+        }
+    }
+
+    ObserveEffects(flow = viewModel.effect) { effect ->
+        when (effect) {
+            is AuthEffect.Error -> context.showToast(effect.error)
+            AuthEffect.Success -> {
+                context.showToast(UiText.Plain("Success"))
+//                TODO: navigate to app
+            }
         }
     }
 
@@ -55,6 +81,7 @@ fun AuthScreen(
             when (action) {
                 AuthAction.OnLogInClick -> onLogInClick()
                 AuthAction.OnSignUpClick -> onSignUpClick()
+                else -> Unit
             }
         }
     )

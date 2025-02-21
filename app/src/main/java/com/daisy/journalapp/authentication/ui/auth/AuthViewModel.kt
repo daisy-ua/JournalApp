@@ -8,7 +8,6 @@ import com.daisy.journalapp.core.presentation.UiText
 import com.daisy.journalapp.core.presentation.utils.handle
 import com.daisy.journalapp.core.presentation.utils.message
 import com.daisy.journalapp.core.presentation.viewmodel.BaseViewModel
-import com.daisy.journalapp.core.presentation.viewmodel.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,11 +15,12 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val signInWithEmailUseCase: SignInWithEmailUseCase,
-) : BaseViewModel<UiState, AuthAction, AuthEffect>(object : UiState {}) {
+) : BaseViewModel<AuthState, AuthAction, AuthEffect>(AuthState()) {
 
     override fun onAction(action: AuthAction) {
         when (action) {
             is AuthAction.OnLogInAuto -> login(action.credentials)
+            is AuthAction.OnAskForCredentials -> markCredentialPromptShown()
             else -> Unit
         }
     }
@@ -40,5 +40,9 @@ class AuthViewModel @Inject constructor(
             e.printStackTrace()
             setEffect { AuthEffect.Error(UiText.Resource(R.string.credentials_retrieval_error)) }
         }
+    }
+
+    private fun markCredentialPromptShown() {
+        updateState { copy(hasAskedForCredentials = true) }
     }
 }

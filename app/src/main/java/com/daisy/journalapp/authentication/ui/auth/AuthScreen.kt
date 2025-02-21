@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.daisy.journalapp.R
 import com.daisy.journalapp.authentication.ui.credential.CredentialManagerWrapper
@@ -48,7 +50,12 @@ fun AuthScreen(
         CredentialManagerWrapper(context as ComponentActivity)
     }
 
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     LaunchedEffect(Unit) {
+        if (state.hasAskedForCredentials) return@LaunchedEffect
+
+        viewModel.setAction(AuthAction.OnAskForCredentials)
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             when (val result = credentialManager.getStoredCredentials()) {
                 is GetCredentialResult.Success -> {

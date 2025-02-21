@@ -10,4 +10,6 @@ sealed interface AuthAction : UiAction {
     data object OnLogInClick : AuthAction
 
     data object OnSignUpClick : AuthAction
+
+    data object OnAskForCredentials : AuthAction
 }

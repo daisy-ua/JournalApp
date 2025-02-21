@@ -18,7 +18,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +33,6 @@ import com.daisy.journalapp.core.presentation.ObserveEffects
 import com.daisy.journalapp.core.presentation.UiText
 import com.daisy.journalapp.core.presentation.components.ArrowLeftIcon
 import com.daisy.journalapp.core.presentation.components.BaseScaffold
-import com.daisy.journalapp.core.presentation.components.BlurredImageBackground
 import com.daisy.journalapp.core.presentation.components.EmailIcon
 import com.daisy.journalapp.core.presentation.components.JourneyActionButton
 import com.daisy.journalapp.core.presentation.components.JourneyOutlinedActionButton
@@ -92,100 +93,97 @@ private fun RegisterScreenContent(
     onAction: (RegisterAction) -> Unit,
 ) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
 
-    BlurredImageBackground(
-        imageModel = R.drawable.auth_image,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        BaseScaffold(
-            topAppBar = {
-                TransparentTopAppBar(
-                    navigationIcon = {
-                        IconButton(onClick = { onAction(RegisterAction.OnNavigateUp) }) {
-                            Icon(
-                                imageVector = ArrowLeftIcon,
-                                contentDescription = stringResource(id = R.string.navigate_up_description),
-                                modifier = Modifier.size(36.dp)
-                            )
-                        }
-                    },
-                )
-            }
-        ) { contentPadding ->
-            Column(
+    BaseScaffold(
+        topAppBar = {
+            TransparentTopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { onAction(RegisterAction.OnNavigateUp) }) {
+                        Icon(
+                            imageVector = ArrowLeftIcon,
+                            contentDescription = stringResource(id = R.string.navigate_up_description),
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+                },
+            )
+        }
+    ) { contentPadding ->
+        Column(
+            modifier = Modifier
+                .padding(contentPadding)
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+        ) {
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                text = stringResource(id = R.string.register_welcome_text),
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(50.dp))
+
+            JourneyTextField(
+                state = state.username,
+                startIcon = PersonIcon,
+                error = state.usernameError?.asString(context),
+                endIcon = null,
+                keyboardType = KeyboardType.Unspecified,
+                hint = stringResource(id = R.string.name),
+                onKeyboardAction = { focusManager.moveFocus(FocusDirection.Down) },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            JourneyTextField(
+                state = state.email,
+                startIcon = EmailIcon,
+                error = state.emailError?.asString(context),
+                endIcon = null,
+                keyboardType = KeyboardType.Email,
+                hint = stringResource(id = R.string.email),
+                onKeyboardAction = { focusManager.moveFocus(FocusDirection.Down) },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            JourneyPasswordTextField(
+                state = state.password,
+                isPasswordVisible = state.isPasswordVisible,
+                error = state.passwordError?.asString(context),
+                onTogglePasswordVisibility = { onAction(RegisterAction.OnTogglePasswordVisibility) },
+                hint = stringResource(id = R.string.password),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            JourneyActionButton(
+                text = stringResource(id = R.string.sign_up),
+                onClick = { onAction(RegisterAction.OnRegisterClick) },
+                isLoading = state.isRegisterInProgress,
                 modifier = Modifier
-                    .padding(contentPadding)
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.Bottom
-            ) {
-                Text(
-                    text = stringResource(id = R.string.register_welcome_text),
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                    .fillMaxWidth()
+            )
 
-                Spacer(modifier = Modifier.height(150.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                JourneyTextField(
-                    state = state.username,
-                    startIcon = PersonIcon,
-                    error = state.usernameError?.asString(context),
-                    endIcon = null,
-                    keyboardType = KeyboardType.Unspecified,
-                    hint = stringResource(id = R.string.name),
-                    modifier = Modifier.fillMaxWidth()
-                )
+            TextDivider(text = stringResource(id = R.string.or))
 
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                JourneyTextField(
-                    state = state.email,
-                    startIcon = EmailIcon,
-                    error = state.emailError?.asString(context),
-                    endIcon = null,
-                    keyboardType = KeyboardType.Email,
-                    hint = stringResource(id = R.string.email),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                JourneyPasswordTextField(
-                    state = state.password,
-                    isPasswordVisible = state.isPasswordVisible,
-                    error = state.passwordError?.asString(context),
-                    onTogglePasswordVisibility = { onAction(RegisterAction.OnTogglePasswordVisibility) },
-                    hint = stringResource(id = R.string.password),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(48.dp))
-
-                JourneyActionButton(
-                    text = stringResource(id = R.string.sign_up),
-                    onClick = { onAction(RegisterAction.OnRegisterClick) },
-                    isLoading = state.isRegisterInProgress,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                TextDivider(text = stringResource(id = R.string.or))
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                JourneyOutlinedActionButton(
-                    text = stringResource(id = R.string.log_in),
-                    onClick = { onAction(RegisterAction.OnLoginClick) },
-                    isLoading = false,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(48.dp))
-            }
+            JourneyOutlinedActionButton(
+                text = stringResource(id = R.string.log_in),
+                onClick = { onAction(RegisterAction.OnLoginClick) },
+                isLoading = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
         }
     }
 }

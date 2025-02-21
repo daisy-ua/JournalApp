@@ -30,7 +30,6 @@ import com.daisy.journalapp.authentication.ui.credential.GetCredentialResult
 import com.daisy.journalapp.core.presentation.ObserveEffects
 import com.daisy.journalapp.core.presentation.UiText
 import com.daisy.journalapp.core.presentation.components.BaseScaffold
-import com.daisy.journalapp.core.presentation.components.BlurredImageBackground
 import com.daisy.journalapp.core.presentation.components.JourneyActionButton
 import com.daisy.journalapp.core.presentation.components.JourneyOutlinedActionButton
 import com.daisy.journalapp.core.presentation.components.TransparentTopAppBar
@@ -91,84 +90,75 @@ fun AuthScreen(
 private fun AuthScreenContent(
     onAction: (AuthAction) -> Unit,
 ) {
-    BlurredImageBackground(
-        imageModel = R.drawable.auth_image,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        BaseScaffold(
-            topAppBar = {
-                TransparentTopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(id = R.string.app_name),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                )
-            }
-        ) { innerPadding ->
-            Column(
-                verticalArrangement = Arrangement.Bottom,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .consumeWindowInsets(innerPadding)
-            ) {
-                Spacer(modifier = Modifier.height(36.dp))
-
-                Text(
-                    text = stringResource(id = R.string.app_description),
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = stringResource(id = R.string.app_description_full),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(.7f),
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(36.dp))
-
-                JourneyActionButton(
-                    text = stringResource(id = R.string.log_in),
-                    onClick = {
-                        onAction(AuthAction.OnLogInClick)
-                    },
-                    isLoading = false,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                JourneyOutlinedActionButton(
-                    text = stringResource(id = R.string.sign_up),
-                    onClick = { onAction(AuthAction.OnSignUpClick) },
-                    isLoading = false,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
-                )
-
-                Spacer(modifier = Modifier.height(48.dp))
-            }
+    BaseScaffold(
+        topAppBar = {
+            TransparentTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            )
         }
+    ) { innerPadding ->
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier
+                .fillMaxSize()
+                .consumeWindowInsets(innerPadding)
+        ) {
+            Spacer(modifier = Modifier.height(36.dp))
 
+            Text(
+                text = stringResource(id = R.string.app_description),
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = stringResource(id = R.string.app_description_full),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(.7f),
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(36.dp))
+
+            JourneyActionButton(
+                text = stringResource(id = R.string.log_in),
+                onClick = {
+                    onAction(AuthAction.OnLogInClick)
+                },
+                isLoading = false,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            JourneyOutlinedActionButton(
+                text = stringResource(id = R.string.sign_up),
+                onClick = { onAction(AuthAction.OnSignUpClick) },
+                isLoading = false,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+        }
     }
-
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun AuthScreenPreview() {
     JournalAppTheme {
-        AuthScreenContent(
-            {}
-        )
+        AuthScreenContent {}
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -34,6 +35,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,11 +51,15 @@ fun JourneyTextField(
     modifier: Modifier = Modifier,
     error: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
-    additionalInfo: String? = null
+    imeAction: ImeAction = ImeAction.Next,
+    onKeyboardAction: KeyboardActionHandler? = null,
+    additionalInfo: String? = null,
 ) {
     var isFocused by remember {
         mutableStateOf(true)
     }
+
+    val onFieldColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
 
     Column(
         modifier = modifier
@@ -88,14 +94,16 @@ fun JourneyTextField(
                 color = MaterialTheme.colorScheme.onBackground
             ),
             keyboardOptions = KeyboardOptions(
-                keyboardType = keyboardType
+                keyboardType = keyboardType,
+                imeAction = imeAction
             ),
+            onKeyboardAction = onKeyboardAction,
             lineLimits = TextFieldLineLimits.SingleLine,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
                 .background(
-                    MaterialTheme.colorScheme.surface
+                    MaterialTheme.colorScheme.onSurface.copy(.1f)
                 )
                 .border(
                     width = 2.dp,
@@ -120,7 +128,7 @@ fun JourneyTextField(
                         Icon(
                             imageVector = startIcon,
                             contentDescription = null,
-                            tint = if (isFocused) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = onFieldColor
                         )
 
                         Spacer(modifier = Modifier.width(16.dp))

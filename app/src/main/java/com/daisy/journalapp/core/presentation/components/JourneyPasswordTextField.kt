@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicSecureTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -29,11 +31,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,10 +52,15 @@ fun JourneyPasswordTextField(
     hint: String,
     modifier: Modifier = Modifier,
     error: String? = null,
+    imeAction: ImeAction = ImeAction.Done,
+    onKeyboardAction: KeyboardActionHandler? = null,
+    additionalInfo: String? = null,
 ) {
     var isFocused by remember {
         mutableStateOf(true)
     }
+
+    val onFieldColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
 
     Column(
         modifier = modifier
@@ -81,10 +91,15 @@ fun JourneyPasswordTextField(
             textStyle = LocalTextStyle.current.copy(
                 color = MaterialTheme.colorScheme.onBackground
             ),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = imeAction
+            ),
+            onKeyboardAction = onKeyboardAction,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surface)
+                .background(MaterialTheme.colorScheme.onSurface.copy(.1f))
                 .border(
                     width = 2.dp,
                     color = if (isFocused) {
@@ -107,7 +122,7 @@ fun JourneyPasswordTextField(
                     Icon(
                         imageVector = LockIcon,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = onFieldColor
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Box(
@@ -117,15 +132,16 @@ fun JourneyPasswordTextField(
                         if (state.text.isEmpty() && !isFocused) {
                             Text(
                                 text = hint,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                    alpha = 0.4f
-                                ),
+                                color = onFieldColor,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
                         innerBox()
                     }
-                    IconButton(onClick = onTogglePasswordVisibility) {
+                    IconButton(
+                        onClick = onTogglePasswordVisibility,
+                        modifier = Modifier.alpha(if (state.text.isEmpty()) 0f else 1f)
+                    ) {
                         Icon(
                             imageVector = if (!isPasswordVisible) {
                                 EyeClosedIcon
@@ -135,7 +151,7 @@ fun JourneyPasswordTextField(
                             } else {
                                 stringResource(id = R.string.hide_password)
                             },
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = onFieldColor
                         )
                     }
                 }

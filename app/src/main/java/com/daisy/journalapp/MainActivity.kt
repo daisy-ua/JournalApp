@@ -22,7 +22,6 @@ class MainActivity : ComponentActivity() {
             JournalAppTheme(darkTheme = true) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
                 ) {
                     JourneyNavGraph(rememberNavController())
                 }

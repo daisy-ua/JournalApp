@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.credentials.PasswordCredential
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -66,7 +67,7 @@ fun AuthScreen(
             when (val result = credentialManager.getStoredCredentials()) {
                 is GetCredentialResult.Success -> {
                     viewModel.setAction(
-                        AuthAction.OnLogInAuto(result.credential)
+                        AuthAction.OnLogInAuto(result.credential as PasswordCredential)
                     )
                 }
 
@@ -96,7 +97,7 @@ fun AuthScreen(
                 AuthAction.OnAskForCredentials -> {
                     scope.launch {
                         when (val result = credentialManager.signInWithGoogle()) {
-                            is GetCredentialResult.SuccessGoogle -> viewModel.setAction(
+                            is GetCredentialResult.Success -> viewModel.setAction(
                                 AuthAction.OnLogInWithGoogle(
                                     result.credential as GoogleIdTokenCredential
                                 )
@@ -187,7 +188,7 @@ private fun AuthScreenContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             JourneyOutlinedActionButton(
-                text = "Continue with google",
+                text = stringResource(id = R.string.continue_with_google),
                 onClick = { onAction(AuthAction.OnAskForCredentials) },
                 isLoading = false,
                 modifier = Modifier

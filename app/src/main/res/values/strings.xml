@@ -6,6 +6,7 @@
     <!--    Auth options    -->
     <string name="log_in">Log in</string>
     <string name="sign_up">Sign up</string>
+    <string name="continue_with_google">Continue with Google</string>
 
     <string name="or">or</string>
 

@@ -10,7 +10,6 @@ import com.daisy.journalapp.authentication.domain.usecase.UsernameValidatorUseCa
 import com.daisy.journalapp.authentication.domain.validation.EmailValidationResult
 import com.daisy.journalapp.authentication.domain.validation.PasswordValidationResult
 import com.daisy.journalapp.authentication.domain.validation.UsernameValidationResult
-import com.daisy.journalapp.authentication.ui.credential.UserCredentials
 import com.daisy.journalapp.core.presentation.AuthConfig
 import com.daisy.journalapp.core.presentation.UiText
 import com.daisy.journalapp.core.presentation.utils.Response
@@ -68,13 +67,10 @@ class RegisterViewModel @Inject constructor(
             result.handle(
                 onSuccess = {
                     setEffect {
+                        val user = (result as Response.Success).data
                         RegisterEffect.Success(
-                            (result as Response.Success).data.let { user ->
-                                UserCredentials(
-                                    id = user.email!!,
-                                    password = user.password
-                                )
-                            }
+                            id = user.email!!,
+                            password = user.password!!
                         )
                     }
                 },

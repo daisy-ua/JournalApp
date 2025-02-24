@@ -4,9 +4,7 @@ import androidx.credentials.Credential
 
 sealed interface GetCredentialResult {
 
-    data class Success(val credential: UserCredentials) : GetCredentialResult
-
-    data class SuccessGoogle(val credential: Credential) : GetCredentialResult
+    data class Success(val credential: Credential) : GetCredentialResult
 
     data object Cancelled : GetCredentialResult
 

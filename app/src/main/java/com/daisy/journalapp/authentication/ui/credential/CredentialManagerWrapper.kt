@@ -1,7 +1,6 @@
 package com.daisy.journalapp.authentication.ui.credential
 
 import android.content.Context
-import android.net.http.NetworkException
 import android.util.Log
 import androidx.credentials.CreatePasswordRequest
 import androidx.credentials.Credential
@@ -29,13 +28,13 @@ class CredentialManagerWrapper(
         return fetchCredentials(GetCredentialRequest(listOf(GetPasswordOption())))
     }
 
-    suspend fun saveCredentials(credential: UserCredentials): SaveCredentialResult {
+    suspend fun saveCredentials(id: String, password: String): SaveCredentialResult {
         return try {
             credentialManager.createCredential(
                 context,
-                CreatePasswordRequest(id = credential.id, password = credential.password!!)
+                CreatePasswordRequest(id = id, password = password)
             )
-            SaveCredentialResult.Success(UserCredentials(credential.id))
+            SaveCredentialResult.Success
         } catch (e: Exception) {
             handleCreateCredentialException(e)
         }
@@ -59,13 +58,7 @@ class CredentialManagerWrapper(
 
     private fun processCredential(credential: Credential): GetCredentialResult {
         return when (credential) {
-            is PasswordCredential -> GetCredentialResult.Success(
-                UserCredentials(
-                    credential.id,
-                    credential.password
-                )
-            )
-
+            is PasswordCredential -> GetCredentialResult.Success(credential)
             is CustomCredential -> processCustomCredential(credential)
             else -> GetCredentialResult.Failure
         }
@@ -75,7 +68,7 @@ class CredentialManagerWrapper(
         return if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
             try {
                 val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                GetCredentialResult.SuccessGoogle(googleIdTokenCredential)
+                GetCredentialResult.Success(googleIdTokenCredential)
             } catch (e: GoogleIdTokenParsingException) {
                 Log.e("CredentialManager", "Google ID Token parsing failed: ${e.message}")
                 GetCredentialResult.Failure

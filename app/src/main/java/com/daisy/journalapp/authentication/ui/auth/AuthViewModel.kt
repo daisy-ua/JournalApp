@@ -1,11 +1,12 @@
 package com.daisy.journalapp.authentication.ui.auth
 
+import androidx.credentials.Credential
+import androidx.credentials.PasswordCredential
 import androidx.lifecycle.viewModelScope
 import com.daisy.journalapp.R
 import com.daisy.journalapp.authentication.domain.repository.AuthResponse
 import com.daisy.journalapp.authentication.domain.usecase.SignInWithEmailUseCase
 import com.daisy.journalapp.authentication.domain.usecase.SignInWithGoogleUseCase
-import com.daisy.journalapp.authentication.ui.credential.UserCredentials
 import com.daisy.journalapp.core.presentation.UiText
 import com.daisy.journalapp.core.presentation.utils.handle
 import com.daisy.journalapp.core.presentation.utils.message
@@ -30,11 +31,11 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private fun signInWithEmail(credentials: UserCredentials) {
+    private fun signInWithEmail(credentials: PasswordCredential) {
         signIn {
             signInWithEmailUseCase(
                 email = credentials.id,
-                password = credentials.password!!
+                password = credentials.password
             )
         }
     }

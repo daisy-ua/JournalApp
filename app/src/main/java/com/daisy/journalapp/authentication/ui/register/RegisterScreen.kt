@@ -67,7 +67,7 @@ fun RegisterScreen(
             is RegisterEffect.Success -> {
                 context.showToast(UiText.Plain("Success"))
                 scope.launch {
-                    val result = credentialManager.saveCredentials(effect.credentials)
+                    credentialManager.saveCredentials(effect.id, effect.password)
                 }
 //                TODO: navigate to app
             }

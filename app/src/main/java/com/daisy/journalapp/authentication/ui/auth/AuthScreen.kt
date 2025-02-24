@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -34,9 +35,12 @@ import com.daisy.journalapp.core.presentation.UiText
 import com.daisy.journalapp.core.presentation.components.BaseScaffold
 import com.daisy.journalapp.core.presentation.components.JourneyActionButton
 import com.daisy.journalapp.core.presentation.components.JourneyOutlinedActionButton
+import com.daisy.journalapp.core.presentation.components.TextDivider
 import com.daisy.journalapp.core.presentation.components.TransparentTopAppBar
 import com.daisy.journalapp.core.presentation.utils.showToast
 import com.daisy.journalapp.ui.theme.JournalAppTheme
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.launch
 
 @Composable
 fun AuthScreen(
@@ -49,6 +53,8 @@ fun AuthScreen(
     val credentialManager = remember {
         CredentialManagerWrapper(context as ComponentActivity)
     }
+
+    val scope = rememberCoroutineScope()
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -87,6 +93,23 @@ fun AuthScreen(
             when (action) {
                 AuthAction.OnLogInClick -> onLogInClick()
                 AuthAction.OnSignUpClick -> onSignUpClick()
+                AuthAction.OnAskForCredentials -> {
+                    scope.launch {
+                        when (val result = credentialManager.signInWithGoogle()) {
+                            is GetCredentialResult.SuccessGoogle -> viewModel.setAction(
+                                AuthAction.OnLogInWithGoogle(
+                                    result.credential as GoogleIdTokenCredential
+                                )
+                            )
+
+                            is GetCredentialResult.Failure ->
+                                context.showToast(UiText.Resource(R.string.credentials_retrieval_error))
+
+                            else -> Unit
+                        }
+                    }
+                }
+
                 else -> Unit
             }
         }
@@ -151,6 +174,21 @@ private fun AuthScreenContent(
             JourneyOutlinedActionButton(
                 text = stringResource(id = R.string.sign_up),
                 onClick = { onAction(AuthAction.OnSignUpClick) },
+                isLoading = false,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextDivider(text = stringResource(id = R.string.or))
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            JourneyOutlinedActionButton(
+                text = "Continue with google",
+                onClick = { onAction(AuthAction.OnAskForCredentials) },
                 isLoading = false,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)

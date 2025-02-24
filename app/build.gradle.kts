@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -12,6 +15,10 @@ android {
     namespace = "com.daisy.journalapp"
     compileSdk = 34
 
+    val apikeyPropertiesFile = rootProject.file("app/apikey.properties")
+    val apikeyProperties = Properties()
+    apikeyProperties.load(FileInputStream(apikeyPropertiesFile))
+
     defaultConfig {
         applicationId = "com.daisy.journalapp"
         minSdk = 26
@@ -23,6 +30,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "WEB_CLIENT_ID", apikeyProperties["WEB_CLIENT_ID"].toString())
     }
 
     buildTypes {
@@ -91,6 +100,7 @@ dependencies {
     implementation(libs.firebase.auth)
 
     implementation(libs.google.services.auth)
+    implementation(libs.identity.google.id)
 
     implementation(libs.coil.compose)
 }

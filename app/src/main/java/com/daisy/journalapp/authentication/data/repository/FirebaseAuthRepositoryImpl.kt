@@ -7,11 +7,14 @@ import com.daisy.journalapp.authentication.domain.repository.AuthResponse
 import com.daisy.journalapp.core.presentation.utils.AuthError
 import com.daisy.journalapp.core.presentation.utils.NetworkError
 import com.daisy.journalapp.core.presentation.utils.Response
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.tasks.await
 import java.io.IOException
@@ -24,7 +27,9 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
 
     override suspend fun signUpWithEmail(userProfile: UserProfile): AuthResponse {
         return try {
-            val result = auth.createUserWithEmailAndPassword(userProfile.email!!, userProfile.password!!).await()
+            val result =
+                auth.createUserWithEmailAndPassword(userProfile.email!!, userProfile.password!!)
+                    .await()
             val firebaseUser = result.user
                 ?: return Response.Error(AuthError.UnknownAuthError)
 
@@ -47,21 +52,15 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
         email: String,
         password: String
     ): AuthResponse {
-        return try {
-            val result = auth.signInWithEmailAndPassword(email, password).await()
-            val firebaseUser = result.user
-                ?: return Response.Error(AuthError.UnknownAuthError)
-            Response.Success(firebaseUser.toUserProfile())
-        } catch (e: FirebaseAuthInvalidCredentialsException) {
-            Response.Error(AuthError.InvalidCredentials)
-        } catch (e: FirebaseAuthInvalidUserException) {
-            Response.Error(AuthError.UserNotFound)
-        } catch (e: Exception) {
-            when (e) {
-                is IOException -> Response.Error(NetworkError.NoInternetConnection)
-                is TimeoutException -> Response.Error(NetworkError.TimeoutError)
-                else -> Response.Error(NetworkError.UnknownNetworkError)
-            }
+        return handleSignIn {
+            auth.signInWithEmailAndPassword(email, password).await()
+        }
+    }
+
+    override suspend fun signInWithGoogle(googleIdTokenCredential: GoogleIdTokenCredential): AuthResponse {
+        val credential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
+        return handleSignIn {
+            auth.signInWithCredential(credential).await()
         }
     }
 
@@ -79,6 +78,25 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
             Response.Success(userProfile.copy(uid = firebaseUser.uid))
         } catch (e: Exception) {
             Response.Error(AuthError.UnknownAuthError)
+        }
+    }
+
+    private suspend fun handleSignIn(signInCallback: suspend () -> AuthResult): AuthResponse {
+        return try {
+            val result = signInCallback()
+            val firebaseUser = result.user
+                ?: return Response.Error(AuthError.UnknownAuthError)
+            Response.Success(firebaseUser.toUserProfile())
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            Response.Error(AuthError.InvalidCredentials)
+        } catch (e: FirebaseAuthInvalidUserException) {
+            Response.Error(AuthError.UserNotFound)
+        } catch (e: Exception) {
+            when (e) {
+                is IOException -> Response.Error(NetworkError.NoInternetConnection)
+                is TimeoutException -> Response.Error(NetworkError.TimeoutError)
+                else -> Response.Error(NetworkError.UnknownNetworkError)
+            }
         }
     }
 }
